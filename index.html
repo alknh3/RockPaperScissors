@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <script>
+    game();
+
+    function game()
+    {
+      let playerScore = 0; 
+      let comuterScore = 0;
+      for(let i = 0; i < 5; i++)
+      {
+        let computerChoice = getComputerChoice();
+        let playerChoice = getPlayerChoice();
+        let winner = playRound(playerChoice, computerChoice); 
+        if(winner === "player")
+          playerScore++;
+        else if(winner === "comp")
+          comuterScore++;
+        console.log(winner);
+      }
+
+      console.log(`you scored ${playerScore} vs computer with ${comuterScore}`);
+      if(playerScore > comuterScore)
+        console.log("you won");
+      else if(playerScore < comuterScore)
+        console.log("you lost");
+      else 
+        console.log("it's a tie");
+    }
+
+    function playRound(playerChoice, computerChoice)
+    {
+      let playerWon = "player";
+      let computerWon = "comp";
+      let tie = "tie";
+
+      console.log(`player ${playerChoice} comp${computerChoice}`);
+      if(playerChoice === computerChoice)
+        return tie;
+      else if (playerChoice === "rock" && computerChoice === "scissor")
+        return playerWon;
+      else if (playerChoice === "paper" && computerChoice === "rock")
+        return playerWon;
+      else if (playerChoice === "scissor" && computerChoice === "paper")
+        return playerWon;
+      else
+        return computerWon;
+    }
+    
+    function getComputerChoice()
+    {
+      let choice = Math.floor(Math.random() * 3); 
+      switch(choice)
+      {
+        case 0: return "rock";
+        case 1: return "paper";
+        case 2: return "scissor";
+      }
+    }
+    
+    function getPlayerChoice()
+    {
+      let choice = "";
+      while (choice === "")
+      {
+        choice = prompt("You are playing against the best AI ever created be careful and choose your moves wisely\n. Rock  . Paper . Scissors").toLowerCase();
+        if (choice !== "rock" && choice !== "paper" && choice !== "scissor")
+          choice = "";
+      }
+        
+      return choice;
+    }
+  </script>
+</body>
+</html>
