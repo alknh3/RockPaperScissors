@@ -6,53 +6,115 @@
   <title>Document</title>
 </head>
 <body>
-  <script>
-    game();
 
+  <button id="play-round">Play Round</button>
+  <button id="rock">Rock</button>
+  <button id="paper">Paper</button>
+  <button id="scissors">Scissors</button>
+
+  <div id="stats">
+    <p>your choice: <span id="player-choice"></span></p>
+    <p>computer choice: <span id="comp-choice"></span></p>
+    <p>your score: <span id="player-score">0</span></p>
+    <p>computer score: <span id="comp-score">0</span></p>
+    <p id="round-winner"></p>
+    <p id="winner"></p>
+  </div>
+
+  <script>
+    let playerScore = 0; 
+    let compScore = 0;
+    let choiceInputed = false;
+    game();
+    
     function game()
     {
-      let playerScore = 0; 
-      let comuterScore = 0;
-      for(let i = 0; i < 5; i++)
-      {
-        let computerChoice = getComputerChoice();
-        let playerChoice = getPlayerChoice();
-        let winner = playRound(playerChoice, computerChoice); 
-        if(winner === "player")
-          playerScore++;
-        else if(winner === "comp")
-          comuterScore++;
-        console.log(winner);
-      }
+      let playerChoice;
+      let rock = document.querySelector('#rock');
+      let paper = document.querySelector('#paper');
+      let scissors = document.querySelector('#scissors');
+      let playBtn = document.querySelector("#play-round");
+      let updatePlayerChoice = (newPlayerCoice) => {
+        let playerChoiceP =  document.querySelector("#player-choice");
+        let computerChoiceP =  document.querySelector("#comp-choice");
+        let roundWinnerP =  document.querySelector("#round-winner");
+        roundWinnerP.textContent = "";
+        computerChoiceP.textContent = "";
+        playerChoice = newPlayerCoice;
+        playerChoiceP.textContent = playerChoice;
+        choiceInputed = true;
 
-      console.log(`you scored ${playerScore} vs computer with ${comuterScore}`);
-      if(playerScore > comuterScore)
-        console.log("you won");
-      else if(playerScore < comuterScore)
-        console.log("you lost");
-      else 
-        console.log("it's a tie");
-    }
+        if(playerScore === 5 || compScore === 5) 
+          clearScores();
 
-    function playRound(playerChoice, computerChoice)
-    {
-      let playerWon = "player";
-      let computerWon = "comp";
-      let tie = "tie";
+      };
 
-      console.log(`player ${playerChoice} comp${computerChoice}`);
-      if(playerChoice === computerChoice)
-        return tie;
-      else if (playerChoice === "rock" && computerChoice === "scissor")
-        return playerWon;
-      else if (playerChoice === "paper" && computerChoice === "rock")
-        return playerWon;
-      else if (playerChoice === "scissor" && computerChoice === "paper")
-        return playerWon;
-      else
-        return computerWon;
+      playBtn.addEventListener('click', () => playRound(playerChoice, getComputerChoice()));
+      rock.addEventListener('click', () => updatePlayerChoice('rock'));
+      paper.addEventListener('click', () =>updatePlayerChoice('paper'));
+      scissors.addEventListener('click', () =>updatePlayerChoice('scissors'));
     }
     
+    function playRound(playerChoice, computerChoice)
+    {
+      if(!choiceInputed) return; // when the player didnt choose any move for this round
+
+      let computerChoiceP = document.querySelector("#comp-choice");
+      let playerChoiceP = document.querySelector("#player-choice"); 
+      let roundWinnerP =  document.querySelector("#round-winner");
+      let playerScoreP = document.querySelector("#player-score");
+      let compScoreP = document.querySelector("#comp-score");
+      let playerWon = "player won the round";
+      let computerWon = "computer won the round";
+      let tie = "the round was a tie";
+      let result;
+      
+      choiceInputed = false;
+      computerChoiceP.textContent = computerChoice;
+      if(playerChoice === computerChoice)
+        result = tie;
+        
+      else if (playerChoice === "rock" && computerChoice === "scissor"){
+        result = playerWon;
+        playerScore++;
+      }
+      else if (playerChoice === "paper" && computerChoice === "rock"){
+        result = playerWon;
+        playerScore++;
+      }
+      else if (playerChoice === "scissor" && computerChoice === "paper"){
+        result = playerWon;
+        playerScore++;
+      }
+      else{
+        result = computerWon;
+        compScore++;
+      }
+      
+      roundWinnerP.textContent = result;    
+      playerScoreP.textContent = playerScore;
+      compScoreP.textContent = compScore;  
+
+      let winnerP = document.querySelector("#winner");
+      if(playerScore === 5)
+        winnerP.textContent = "you won!!";
+      else if(compScore === 5)
+        winnerP.textContent = "the computer one!!";
+    }
+    
+    function clearScores(){
+      let playerScoreP = document.querySelector("#player-score");
+      let compScoreP = document.querySelector("#comp-score");
+      let winnerP =  document.querySelector("#winner");
+      
+      playerScoreP.textContent = 0;
+      compScoreP.textContent = 0;
+      winnerP.textContent = "";
+
+      playerScore = 0;
+      compScore = 0;
+    }
+
     function getComputerChoice()
     {
       let choice = Math.floor(Math.random() * 3); 
@@ -62,19 +124,6 @@
         case 1: return "paper";
         case 2: return "scissor";
       }
-    }
-    
-    function getPlayerChoice()
-    {
-      let choice = "";
-      while (choice === "")
-      {
-        choice = prompt("You are playing against the best AI ever created be careful and choose your moves wisely\n. Rock  . Paper . Scissors").toLowerCase();
-        if (choice !== "rock" && choice !== "paper" && choice !== "scissor")
-          choice = "";
-      }
-        
-      return choice;
     }
   </script>
 </body>
